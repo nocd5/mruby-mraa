@@ -37,6 +37,32 @@ mrb_mraa_gpio_init(mrb_state *mrb, mrb_value self){
 }
 
 static mrb_value
+mrb_mraa_gpio_edge_mode(mrb_state *mrb, mrb_value self){
+    mrb_int edge_mode;
+    mraa_gpio_context gpio;
+
+    Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, gpio);
+
+    mrb_get_args(mrb, "i", &edge_mode);
+    mraa_gpio_edge_mode(gpio, edge_mode);
+
+    return mrb_nil_value();
+}
+
+static mrb_value
+mrb_mraa_gpio_mode(mrb_state *mrb, mrb_value self){
+    mrb_int edge_mode;
+    mraa_gpio_context gpio;
+
+    Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, gpio);
+
+    mrb_get_args(mrb, "i", &edge_mode);
+    mraa_gpio_mode(gpio, edge_mode);
+
+    return mrb_nil_value();
+}
+
+static mrb_value
 mrb_mraa_gpio_dir(mrb_state *mrb, mrb_value self){
     mrb_int dir;
     mraa_gpio_context gpio;
@@ -47,6 +73,17 @@ mrb_mraa_gpio_dir(mrb_state *mrb, mrb_value self){
     mraa_gpio_dir(gpio, dir);
 
     return mrb_nil_value();
+}
+
+static mrb_value
+mrb_mraa_gpio_read(mrb_state *mrb, mrb_value self){
+    mrb_int val;
+    mraa_gpio_context gpio;
+
+    Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, gpio);
+
+    val = mraa_gpio_read(gpio);
+    return mrb_fixnum_value(val);
 }
 
 static mrb_value
@@ -63,14 +100,50 @@ mrb_mraa_gpio_write(mrb_state *mrb, mrb_value self){
 }
 
 static mrb_value
-mrb_mraa_gpio_read(mrb_state *mrb, mrb_value self){
-    mrb_int val;
+mrb_mraa_gpio_owner(mrb_state *mrb, mrb_value self){
+    mrb_bool owner;
     mraa_gpio_context gpio;
 
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, gpio);
 
-    val = mraa_gpio_read(gpio);
-    return mrb_fixnum_value(val);
+    mrb_get_args(mrb, "b", &owner);
+    mraa_gpio_owner(gpio, owner);
+
+    return mrb_nil_value();
+}
+
+static mrb_value
+mrb_mraa_gpio_use_mmaped(mrb_state *mrb, mrb_value self){
+    mrb_bool use_mmaped;
+    mraa_gpio_context gpio;
+
+    Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, gpio);
+
+    mrb_get_args(mrb, "b", &use_mmaped);
+    mraa_gpio_use_mmaped(gpio, use_mmaped);
+
+    return mrb_nil_value();
+}
+
+static mrb_value
+mrb_mraa_gpio_get_pin(mrb_state *mrb, mrb_value self){
+    mrb_int pin;
+    mrb_bool raw;
+    mraa_gpio_context gpio;
+
+    Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, gpio);
+
+    raw = false;
+    mrb_get_args(mrb, "|b", &raw);
+
+    if (raw == false){
+        pin = mraa_gpio_get_pin(gpio);
+    }
+    else {
+        pin = mraa_gpio_get_pin_raw(gpio);
+    }
+
+    return mrb_fixnum_value(pin);
 }
 
 static mrb_value
@@ -95,9 +168,14 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     MRB_SET_INSTANCE_TT(class_mraa_gpio, MRB_TT_DATA);
     // Gpio instance methods
     mrb_define_method(mrb, class_mraa_gpio, "initialize", mrb_mraa_gpio_init, MRB_ARGS_REQ(1) | MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, class_mraa_gpio, "edge_mode", mrb_mraa_gpio_edge_mode, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_gpio, "mode", mrb_mraa_gpio_mode, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, class_mraa_gpio, "dir", mrb_mraa_gpio_dir, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, class_mraa_gpio, "write", mrb_mraa_gpio_write, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, class_mraa_gpio, "read", mrb_mraa_gpio_read, MRB_ARGS_NONE());
+    mrb_define_method(mrb, class_mraa_gpio, "write", mrb_mraa_gpio_write, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_gpio, "owner", mrb_mraa_gpio_owner, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_gpio, "use_mmaped", mrb_mraa_gpio_use_mmaped, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_gpio, "get_pin", mrb_mraa_gpio_get_pin, MRB_ARGS_OPT(1));
     // Gpio constants
     // gpio_mode
     mrb_define_const(mrb, class_mraa_gpio, "STRONG", mrb_fixnum_value(MRAA_GPIO_STRONG));
@@ -107,6 +185,8 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_const(mrb, class_mraa_gpio, "HIZ", mrb_fixnum_value(MRAA_GPIO_HIZ));
     mrb_define_const(mrb, class_mraa_gpio, "OUT", mrb_fixnum_value(MRAA_GPIO_OUT));
     mrb_define_const(mrb, class_mraa_gpio, "IN", mrb_fixnum_value(MRAA_GPIO_IN));
+    mrb_define_const(mrb, class_mraa_gpio, "OUT_HIGH", mrb_fixnum_value(MRAA_GPIO_OUT_HIGH));
+    mrb_define_const(mrb, class_mraa_gpio, "OUT_LOW", mrb_fixnum_value(MRAA_GPIO_OUT_LOW));
     // gpio_edge
     mrb_define_const(mrb, class_mraa_gpio, "EDGE_NONE", mrb_fixnum_value(MRAA_GPIO_EDGE_NONE));
     mrb_define_const(mrb, class_mraa_gpio, "EDGE_BOTH", mrb_fixnum_value(MRAA_GPIO_EDGE_BOTH));
