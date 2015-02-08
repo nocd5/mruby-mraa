@@ -70,8 +70,6 @@ mrb_mraa_gpio_read(mrb_state *mrb, mrb_value self){
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, gpio);
 
     val = mraa_gpio_read(gpio);
-    printf("%d", val);
-
     return mrb_fixnum_value(val);
 }
 
