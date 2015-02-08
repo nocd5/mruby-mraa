@@ -6,7 +6,6 @@
 #include <mruby/variable.h>
 #include <mraa.h>
 
-
 typedef struct {
     mrb_state *mrb;
     mrb_value func;
@@ -59,6 +58,7 @@ mrb_mraa_gpio_init(mrb_state *mrb, mrb_value self){
 
     DATA_PTR(self) = pmrb_mraa_gpio;
     DATA_TYPE(self) = &mrb_mraa_gpio_ctx_type;
+
     return self;
 }
 
@@ -149,6 +149,7 @@ mrb_mraa_gpio_read(mrb_state *mrb, mrb_value self){
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmrb_mraa_gpio);
 
     val = mraa_gpio_read(pmrb_mraa_gpio->gpio);
+
     return mrb_fixnum_value(val);
 }
 
