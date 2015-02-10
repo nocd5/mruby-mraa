@@ -26,7 +26,7 @@ gpio_close(mrb_state *mrb, void *p){
             mrb_free(mrb, pmmg->gpio_isr_args);
         }
         mraa_gpio_close(pmmg->gpio);
-        mrb_free(mrb, p);
+        mrb_free(mrb, pmmg);
     }
 }
 
@@ -39,24 +39,21 @@ mrb_mraa_gpio_init(mrb_state *mrb, mrb_value self){
     mrb_mraa_gpio_t *pmmg;
     mrb_int pin;
     mrb_bool raw;
-    mraa_gpio_context gpio;
+
+    pmmg = (mrb_mraa_gpio_t *)mrb_malloc(mrb, sizeof(mrb_mraa_gpio_t));
+    memset(pmmg, 0, sizeof(mrb_mraa_gpio_t));
+    DATA_TYPE(self) = &mrb_mraa_gpio_ctx_type;
+    DATA_PTR(self) = pmmg;
 
     raw = false;
     mrb_get_args(mrb, "i|b", &pin, &raw);
 
     if (raw == false){
-        gpio = mraa_gpio_init(pin);
+        pmmg->gpio = mraa_gpio_init(pin);
     }
     else {
-        gpio = mraa_gpio_init_raw(pin);
+        pmmg->gpio = mraa_gpio_init_raw(pin);
     }
-
-    pmmg = (mrb_mraa_gpio_t *)mrb_malloc(mrb, sizeof(mrb_mraa_gpio_t));
-    pmmg->gpio = gpio;
-    pmmg->gpio_isr_args = NULL;
-
-    DATA_PTR(self) = pmmg;
-    DATA_TYPE(self) = &mrb_mraa_gpio_ctx_type;
 
     return self;
 }
