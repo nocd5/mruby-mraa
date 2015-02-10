@@ -1,7 +1,17 @@
-#include <string.h>
 #include <mruby.h>
 #include <mruby/class.h>
 #include <mraa.h>
+
+// COMMON
+extern mrb_value mrb_mraa_pin_mode_test(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_adc_raw_bits(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_adc_supported_bits(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_set_log_level(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_get_platform_name(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_set_priority(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_version(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_result_print(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_get_platform_type(mrb_state *mrb, mrb_value self);
 
 // GPIO
 extern mrb_value mrb_mraa_gpio_init(mrb_state *mrb, mrb_value self);
@@ -16,22 +26,55 @@ extern mrb_value mrb_mraa_gpio_owner(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_use_mmaped(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_get_pin(mrb_state *mrb, mrb_value self);
 
-static mrb_value
-mrb_mraa_version(mrb_state *mrb, mrb_value self){
-    mrb_value result;
-    const char* ver;
-    ver = mraa_get_version();
-    result = mrb_str_new(mrb, ver, strlen(ver));
-    return result;
-}
-
 void
 mrb_mruby_mraa_gem_init(mrb_state* mrb){
     struct RClass *class_mraa;
     struct RClass *class_mraa_gpio;
 
     class_mraa = mrb_define_class(mrb, "Mraa", mrb->object_class);
+    // COMMON
+    mrb_define_class_method(mrb, class_mraa, "pin_mode_test", mrb_mraa_pin_mode_test, MRB_ARGS_REQ(2));
+    mrb_define_class_method(mrb, class_mraa, "adc_raw_bits", mrb_mraa_adc_raw_bits, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, class_mraa, "adc_supported_bits", mrb_mraa_adc_supported_bits, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, class_mraa, "set_log_level", mrb_mraa_set_log_level, MRB_ARGS_REQ(1));
+    mrb_define_class_method(mrb, class_mraa, "get_platform_name", mrb_mraa_get_platform_name, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, class_mraa, "set_priority", mrb_mraa_set_priority, MRB_ARGS_REQ(1));
     mrb_define_class_method(mrb, class_mraa, "version", mrb_mraa_version, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, class_mraa, "result_print", mrb_mraa_result_print, MRB_ARGS_REQ(1));
+    mrb_define_class_method(mrb, class_mraa, "get_platform_type", mrb_mraa_get_platform_type, MRB_ARGS_NONE());
+    // constants
+    // mraa_pinmodes
+    mrb_define_const(mrb, class_mraa, "MRAA_PIN_VALID", mrb_fixnum_value(MRAA_PIN_VALID));
+    mrb_define_const(mrb, class_mraa, "MRAA_PIN_GPIO", mrb_fixnum_value(MRAA_PIN_GPIO));
+    mrb_define_const(mrb, class_mraa, "MRAA_PIN_PWM", mrb_fixnum_value(MRAA_PIN_PWM));
+    mrb_define_const(mrb, class_mraa, "MRAA_PIN_FAST_GPIO", mrb_fixnum_value(MRAA_PIN_FAST_GPIO));
+    mrb_define_const(mrb, class_mraa, "MRAA_PIN_SPI", mrb_fixnum_value(MRAA_PIN_SPI));
+    mrb_define_const(mrb, class_mraa, "MRAA_PIN_I2C", mrb_fixnum_value(MRAA_PIN_I2C));
+    mrb_define_const(mrb, class_mraa, "MRAA_PIN_AIO", mrb_fixnum_value(MRAA_PIN_AIO));
+    mrb_define_const(mrb, class_mraa, "MRAA_PIN_UART", mrb_fixnum_value(MRAA_PIN_UART));
+    // mraa_result
+    mrb_define_const(mrb, class_mraa, "MRAA_SUCCESS", mrb_fixnum_value(MRAA_SUCCESS));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_FEATURE_NOT_IMPLEMENTED", mrb_fixnum_value(MRAA_ERROR_FEATURE_NOT_IMPLEMENTED));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_FEATURE_NOT_SUPPORTED", mrb_fixnum_value(MRAA_ERROR_FEATURE_NOT_SUPPORTED));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_INVALID_VERBOSITY_LEVEL", mrb_fixnum_value(MRAA_ERROR_INVALID_VERBOSITY_LEVEL));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_INVALID_PARAMETER", mrb_fixnum_value(MRAA_ERROR_INVALID_PARAMETER));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_INVALID_HANDLE", mrb_fixnum_value(MRAA_ERROR_INVALID_HANDLE));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_NO_RESOURCES", mrb_fixnum_value(MRAA_ERROR_NO_RESOURCES));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_INVALID_RESOURCE", mrb_fixnum_value(MRAA_ERROR_INVALID_RESOURCE));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_INVALID_QUEUE_TYPE", mrb_fixnum_value(MRAA_ERROR_INVALID_QUEUE_TYPE));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_NO_DATA_AVAILABLE", mrb_fixnum_value(MRAA_ERROR_NO_DATA_AVAILABLE));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_INVALID_PLATFORM", mrb_fixnum_value(MRAA_ERROR_INVALID_PLATFORM));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_PLATFORM_NOT_INITIALISED", mrb_fixnum_value(MRAA_ERROR_PLATFORM_NOT_INITIALISED));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_PLATFORM_ALREADY_INITIALISED", mrb_fixnum_value(MRAA_ERROR_PLATFORM_ALREADY_INITIALISED));
+    mrb_define_const(mrb, class_mraa, "MRAA_ERROR_UNSPECIFIED", mrb_fixnum_value(MRAA_ERROR_UNSPECIFIED));
+    // mraa_platform
+    mrb_define_const(mrb, class_mraa, "MRAA_INTEL_GALILEO_GEN1", mrb_fixnum_value(MRAA_INTEL_GALILEO_GEN1));
+    mrb_define_const(mrb, class_mraa, "MRAA_INTEL_GALILEO_GEN2", mrb_fixnum_value(MRAA_INTEL_GALILEO_GEN2));
+    mrb_define_const(mrb, class_mraa, "MRAA_INTEL_EDISON_FAB_C", mrb_fixnum_value(MRAA_INTEL_EDISON_FAB_C));
+    mrb_define_const(mrb, class_mraa, "MRAA_INTEL_DE3815", mrb_fixnum_value(MRAA_INTEL_DE3815));
+    mrb_define_const(mrb, class_mraa, "MRAA_INTEL_MINNOWBOARD_MAX", mrb_fixnum_value(MRAA_INTEL_MINNOWBOARD_MAX));
+    mrb_define_const(mrb, class_mraa, "MRAA_RASPBERRY_PI_B", mrb_fixnum_value(MRAA_RASPBERRY_PI_B));
+    mrb_define_const(mrb, class_mraa, "MRAA_UNKNOWN_PLATFORM", mrb_fixnum_value(MRAA_UNKNOWN_PLATFORM));
 
     // GPIO
     class_mraa_gpio = mrb_define_class_under(mrb, class_mraa, "Gpio", mrb->object_class);

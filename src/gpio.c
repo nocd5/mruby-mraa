@@ -63,12 +63,14 @@ mrb_mraa_gpio_edge_mode(mrb_state *mrb, mrb_value self){
     mrb_mraa_gpio_t *pmmg;
     mrb_int edge_mode;
 
+    mraa_result_t result;
+
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
 
     mrb_get_args(mrb, "i", &edge_mode);
-    mraa_gpio_edge_mode(pmmg->gpio, edge_mode);
+    result = mraa_gpio_edge_mode(pmmg->gpio, edge_mode);
 
-    return mrb_nil_value();
+    return mrb_fixnum_value(result);
 }
 
 static void
@@ -85,6 +87,8 @@ mrb_mraa_gpio_isr(mrb_state *mrb, mrb_value self){
     mrb_mraa_gpio_t *pmmg;
     mrb_int edge_mode;
 
+    mraa_result_t result;
+
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
 
     pmmg->gpio_isr_args =
@@ -96,20 +100,22 @@ mrb_mraa_gpio_isr(mrb_state *mrb, mrb_value self){
     mrb_get_args(mrb, "io|o",
             &edge_mode, &pmmg->gpio_isr_args->func, &pmmg->gpio_isr_args->args);
 
-    mraa_gpio_isr(pmmg->gpio, edge_mode, gpio_interrupt, (void *)pmmg->gpio_isr_args);
+    result = mraa_gpio_isr(pmmg->gpio, edge_mode, gpio_interrupt, (void *)pmmg->gpio_isr_args);
 
-    return mrb_nil_value();
+    return mrb_fixnum_value(result);
 }
 
 mrb_value
 mrb_mraa_gpio_isr_exit(mrb_state *mrb, mrb_value self){
     mrb_mraa_gpio_t *pmmg;
 
+    mraa_result_t result;
+
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
 
-    mraa_gpio_isr_exit(pmmg->gpio);
+    result = mraa_gpio_isr_exit(pmmg->gpio);
 
-    return mrb_nil_value();
+    return mrb_fixnum_value(result);
 }
 
 mrb_value
@@ -117,12 +123,14 @@ mrb_mraa_gpio_mode(mrb_state *mrb, mrb_value self){
     mrb_mraa_gpio_t *pmmg;
     mrb_int edge_mode;
 
+    mraa_result_t result;
+
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
 
     mrb_get_args(mrb, "i", &edge_mode);
-    mraa_gpio_mode(pmmg->gpio, edge_mode);
+    result = mraa_gpio_mode(pmmg->gpio, edge_mode);
 
-    return mrb_nil_value();
+    return mrb_fixnum_value(result);
 }
 
 mrb_value
@@ -130,12 +138,14 @@ mrb_mraa_gpio_dir(mrb_state *mrb, mrb_value self){
     mrb_mraa_gpio_t *pmmg;
     mrb_int dir;
 
+    mraa_result_t result;
+
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
 
     mrb_get_args(mrb, "i", &dir);
-    mraa_gpio_dir(pmmg->gpio, dir);
+    result = mraa_gpio_dir(pmmg->gpio, dir);
 
-    return mrb_nil_value();
+    return mrb_fixnum_value(result);
 }
 
 mrb_value
@@ -155,12 +165,14 @@ mrb_mraa_gpio_write(mrb_state *mrb, mrb_value self){
     mrb_mraa_gpio_t *pmmg;
     mrb_int val;
 
+    mraa_result_t result;
+
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
 
     mrb_get_args(mrb, "i", &val);
-    mraa_gpio_write(pmmg->gpio, val);
+    result = mraa_gpio_write(pmmg->gpio, val);
 
-    return mrb_nil_value();
+    return mrb_fixnum_value(result);
 }
 
 mrb_value
@@ -168,12 +180,14 @@ mrb_mraa_gpio_owner(mrb_state *mrb, mrb_value self){
     mrb_mraa_gpio_t *pmmg;
     mrb_bool owner;
 
+    mraa_result_t result;
+
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
 
     mrb_get_args(mrb, "b", &owner);
-    mraa_gpio_owner(pmmg->gpio, owner);
+    result = mraa_gpio_owner(pmmg->gpio, owner);
 
-    return mrb_nil_value();
+    return mrb_fixnum_value(result);
 }
 
 mrb_value
@@ -181,12 +195,14 @@ mrb_mraa_gpio_use_mmaped(mrb_state *mrb, mrb_value self){
     mrb_mraa_gpio_t *pmmg;
     mrb_bool use_mmaped;
 
+    mraa_result_t result;
+
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
 
     mrb_get_args(mrb, "b", &use_mmaped);
-    mraa_gpio_use_mmaped(pmmg->gpio, use_mmaped);
+    result = mraa_gpio_use_mmaped(pmmg->gpio, use_mmaped);
 
-    return mrb_nil_value();
+    return mrb_fixnum_value(result);
 }
 
 mrb_value
