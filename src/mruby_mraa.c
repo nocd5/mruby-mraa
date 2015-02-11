@@ -13,6 +13,13 @@ extern mrb_value mrb_mraa_version(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_result_print(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_get_platform_type(mrb_state *mrb, mrb_value self);
 
+// AIO
+extern mrb_value mrb_mraa_aio_init(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_aio_read(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_aio_read_float(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_aio_set_bit(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_aio_get_bit(mrb_state *mrb, mrb_value self);
+
 // GPIO
 extern mrb_value mrb_mraa_gpio_init(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_edge_mode(mrb_state *mrb, mrb_value self);
@@ -25,13 +32,6 @@ extern mrb_value mrb_mraa_gpio_write(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_owner(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_use_mmaped(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_get_pin(mrb_state *mrb, mrb_value self);
-
-// AIO
-extern mrb_value mrb_mraa_aio_init(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mraa_aio_read(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mraa_aio_read_float(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mraa_aio_set_bit(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mraa_aio_get_bit(mrb_state *mrb, mrb_value self);
 
 void
 mrb_mruby_mraa_gem_init(mrb_state* mrb){
@@ -84,6 +84,16 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_const(mrb, class_mraa, "MRAA_RASPBERRY_PI_B", mrb_fixnum_value(MRAA_RASPBERRY_PI_B));
     mrb_define_const(mrb, class_mraa, "MRAA_UNKNOWN_PLATFORM", mrb_fixnum_value(MRAA_UNKNOWN_PLATFORM));
 
+    // AIO
+    class_mraa_aio = mrb_define_class_under(mrb, class_mraa, "Aio", mrb->object_class);
+    MRB_SET_INSTANCE_TT(class_mraa_aio, MRB_TT_DATA);
+    // Aio instance methods
+    mrb_define_method(mrb, class_mraa_aio, "initialize", mrb_mraa_aio_init, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_aio, "read", mrb_mraa_aio_read, MRB_ARGS_NONE());
+    mrb_define_method(mrb, class_mraa_aio, "read_float", mrb_mraa_aio_read_float, MRB_ARGS_NONE());
+    mrb_define_method(mrb, class_mraa_aio, "set_bit", mrb_mraa_aio_set_bit, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_aio, "get_bit", mrb_mraa_aio_get_bit, MRB_ARGS_NONE());
+
     // GPIO
     class_mraa_gpio = mrb_define_class_under(mrb, class_mraa, "Gpio", mrb->object_class);
     MRB_SET_INSTANCE_TT(class_mraa_gpio, MRB_TT_DATA);
@@ -115,16 +125,6 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_const(mrb, class_mraa_gpio, "EDGE_BOTH", mrb_fixnum_value(MRAA_GPIO_EDGE_BOTH));
     mrb_define_const(mrb, class_mraa_gpio, "EDGE_RISING", mrb_fixnum_value(MRAA_GPIO_EDGE_RISING));
     mrb_define_const(mrb, class_mraa_gpio, "EDGE_FALLING", mrb_fixnum_value(MRAA_GPIO_EDGE_FALLING));
-
-    // AIO
-    class_mraa_aio = mrb_define_class_under(mrb, class_mraa, "Aio", mrb->object_class);
-    MRB_SET_INSTANCE_TT(class_mraa_aio, MRB_TT_DATA);
-    // Aio instance methods
-    mrb_define_method(mrb, class_mraa_aio, "initialize", mrb_mraa_aio_init, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, class_mraa_aio, "read", mrb_mraa_aio_read, MRB_ARGS_NONE());
-    mrb_define_method(mrb, class_mraa_aio, "read_float", mrb_mraa_aio_read_float, MRB_ARGS_NONE());
-    mrb_define_method(mrb, class_mraa_aio, "set_bit", mrb_mraa_aio_set_bit, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, class_mraa_aio, "get_bit", mrb_mraa_aio_get_bit, MRB_ARGS_NONE());
 
     mraa_init();
 }
