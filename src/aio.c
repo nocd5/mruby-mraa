@@ -22,6 +22,10 @@ mrb_mraa_aio_init(mrb_state *mrb, mrb_value self){
 
     aio = mraa_aio_init(pin);
 
+    if (aio == NULL){
+        mrb_raisef(mrb, E_RUNTIME_ERROR, "Failed to initialize PIN:%S.", mrb_fixnum_value(pin));
+    }
+
     DATA_TYPE(self) = &mrb_mraa_aio_ctx_type;
     DATA_PTR(self) = aio;
 

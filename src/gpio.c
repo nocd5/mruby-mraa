@@ -57,6 +57,10 @@ mrb_mraa_gpio_init(mrb_state *mrb, mrb_value self){
         pmmg->gpio = mraa_gpio_init_raw(pin);
     }
 
+    if (pmmg->gpio == NULL){
+        mrb_raisef(mrb, E_RUNTIME_ERROR, "Failed to initialize PIN:%S.", mrb_fixnum_value(pin));
+    }
+
     return self;
 }
 
