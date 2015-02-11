@@ -25,7 +25,9 @@ gpio_close(mrb_state *mrb, void *p){
         if (pmmg->gpio_isr_args != NULL){
             mrb_free(mrb, pmmg->gpio_isr_args);
         }
-        mraa_gpio_close(pmmg->gpio);
+        if (pmmg->gpio != NULL){
+            mraa_gpio_close(pmmg->gpio);
+        }
         mrb_free(mrb, pmmg);
     }
 }
