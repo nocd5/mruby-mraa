@@ -36,7 +36,14 @@ extern mrb_value mrb_mraa_gpio_get_pin(mrb_state *mrb, mrb_value self);
 // I2C
 extern mrb_value mrb_mraa_i2c_init(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_i2c_frequency(mrb_state *mrb, mrb_value self);
-    // read/write TBD
+extern mrb_value mrb_mraa_i2c_read(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_i2c_read_byte(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_i2c_read_reg(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_i2c_read_word_reg(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_i2c_write(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_i2c_write_byte(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_i2c_write_reg(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_i2c_write_word_reg(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_i2c_address(mrb_state *mrb, mrb_value self);
 
 void
@@ -139,18 +146,15 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     // I2c instance methods
     mrb_define_method(mrb, class_mraa_i2c, "initialize", mrb_mraa_i2c_init, MRB_ARGS_REQ(1) | MRB_ARGS_OPT(1));
     mrb_define_method(mrb, class_mraa_i2c, "frequency", mrb_mraa_i2c_frequency, MRB_ARGS_REQ(1));
-    // read/write TBD
+    mrb_define_method(mrb, class_mraa_i2c, "read", mrb_mraa_i2c_read, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_i2c, "read_byte", mrb_mraa_i2c_read_byte, MRB_ARGS_NONE());
+    mrb_define_method(mrb, class_mraa_i2c, "read_reg", mrb_mraa_i2c_read_reg, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_i2c, "read_word_reg", mrb_mraa_i2c_read_word_reg, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_i2c, "write", mrb_mraa_i2c_write, MRB_ARGS_REQ(1) | MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, class_mraa_i2c, "write_byte", mrb_mraa_i2c_write_byte, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_i2c, "write_reg", mrb_mraa_i2c_write_reg, MRB_ARGS_REQ(2));
+    mrb_define_method(mrb, class_mraa_i2c, "write_word_reg", mrb_mraa_i2c_write_word_reg, MRB_ARGS_REQ(2));
     mrb_define_method(mrb, class_mraa_i2c, "address", mrb_mraa_i2c_address, MRB_ARGS_REQ(1));
-
-    //int mraa_i2c_read(mraa_i2c_context dev, uint8_t *data, int length);
-    //uint8_t mraa_i2c_read_byte(mraa_i2c_context dev);
-    //uint8_t mraa_i2c_read_byte_data(mraa_i2c_context dev, const uint8_t command);
-    //uint16_t mraa_i2c_read_word_data(mraa_i2c_context dev, const uint8_t command);
-    //mraa_result_t mraa_i2c_write(mraa_i2c_context dev, const uint8_t *data, int length);
-    //mraa_result_t mraa_i2c_write_byte(mraa_i2c_context dev, const uint8_t data);
-    //mraa_result_t mraa_i2c_write_byte_data(mraa_i2c_context dev, const uint8_t data, const uint8_t command);
-    //mraa_result_t mraa_i2c_write_word_data(mraa_i2c_context dev, const uint16_t data, const uint8_t command);
-
     // I2c constants
     // i2c_mode
     mrb_define_const(mrb, class_mraa_i2c, "STD", mrb_fixnum_value(MRAA_I2C_STD));
