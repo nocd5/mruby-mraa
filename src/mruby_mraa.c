@@ -13,6 +13,21 @@ extern mrb_value mrb_mraa_version(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_result_print(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_get_platform_type(mrb_state *mrb, mrb_value self);
 
+// PWM
+extern mrb_value mrb_mraa_pwm_init(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_write(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_read(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_period(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_period_ms(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_period_us(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_pulsewidth(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_pulsewidth_ms(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_pulsewidth_us(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_enable(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_owner(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_config_ms(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_pwm_config_percent(mrb_state *mrb, mrb_value self);
+
 // AIO
 extern mrb_value mrb_mraa_aio_init(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_aio_read(mrb_state *mrb, mrb_value self);
@@ -49,6 +64,7 @@ extern mrb_value mrb_mraa_i2c_address(mrb_state *mrb, mrb_value self);
 void
 mrb_mruby_mraa_gem_init(mrb_state* mrb){
     struct RClass *class_mraa;
+    struct RClass *class_mraa_pwm;
     struct RClass *class_mraa_aio;
     struct RClass *class_mraa_gpio;
     struct RClass *class_mraa_i2c;
@@ -97,6 +113,24 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_const(mrb, class_mraa, "INTEL_MINNOWBOARD_MAX", mrb_fixnum_value(MRAA_INTEL_MINNOWBOARD_MAX));
     mrb_define_const(mrb, class_mraa, "RASPBERRY_PI_B", mrb_fixnum_value(MRAA_RASPBERRY_PI_B));
     mrb_define_const(mrb, class_mraa, "UNKNOWN_PLATFORM", mrb_fixnum_value(MRAA_UNKNOWN_PLATFORM));
+
+    // PWM
+    class_mraa_pwm = mrb_define_class_under(mrb, class_mraa, "Pwm", mrb->object_class);
+    MRB_SET_INSTANCE_TT(class_mraa_pwm, MRB_TT_DATA);
+    // Pwm instance methods
+    mrb_define_method(mrb, class_mraa_pwm, "initialize", mrb_mraa_pwm_init, MRB_ARGS_REQ(1) | MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, class_mraa_pwm, "write", mrb_mraa_pwm_write, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_pwm, "read", mrb_mraa_pwm_read, MRB_ARGS_NONE());
+    mrb_define_method(mrb, class_mraa_pwm, "period", mrb_mraa_pwm_period, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_pwm, "period_ms", mrb_mraa_pwm_period_ms, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_pwm, "period_us", mrb_mraa_pwm_period_us, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_pwm, "pulsewidth", mrb_mraa_pwm_pulsewidth, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_pwm, "pulsewidth_ms", mrb_mraa_pwm_pulsewidth_ms, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_pwm, "pulsewidth_us", mrb_mraa_pwm_pulsewidth_us, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_pwm, "enable", mrb_mraa_pwm_enable, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_pwm, "owner", mrb_mraa_pwm_owner, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_pwm, "config_ms", mrb_mraa_pwm_config_ms, MRB_ARGS_REQ(2));
+    mrb_define_method(mrb, class_mraa_pwm, "config_percent", mrb_mraa_pwm_config_percent, MRB_ARGS_REQ(2));
 
     // AIO
     class_mraa_aio = mrb_define_class_under(mrb, class_mraa, "Aio", mrb->object_class);
