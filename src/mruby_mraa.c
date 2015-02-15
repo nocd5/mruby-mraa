@@ -91,7 +91,7 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_class_method(mrb, class_mraa, "result_print", mrb_mraa_result_print, MRB_ARGS_REQ(1));
     mrb_define_class_method(mrb, class_mraa, "get_platform_type", mrb_mraa_get_platform_type, MRB_ARGS_NONE());
     // constants
-    // mraa_pinmodes
+    // mraa_pinmodes_t
     mrb_define_const(mrb, class_mraa, "PIN_VALID", mrb_fixnum_value(MRAA_PIN_VALID));
     mrb_define_const(mrb, class_mraa, "PIN_GPIO", mrb_fixnum_value(MRAA_PIN_GPIO));
     mrb_define_const(mrb, class_mraa, "PIN_PWM", mrb_fixnum_value(MRAA_PIN_PWM));
@@ -100,7 +100,7 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_const(mrb, class_mraa, "PIN_I2C", mrb_fixnum_value(MRAA_PIN_I2C));
     mrb_define_const(mrb, class_mraa, "PIN_AIO", mrb_fixnum_value(MRAA_PIN_AIO));
     mrb_define_const(mrb, class_mraa, "PIN_UART", mrb_fixnum_value(MRAA_PIN_UART));
-    // mraa_result
+    // mraa_result_t
     mrb_define_const(mrb, class_mraa, "SUCCESS", mrb_fixnum_value(MRAA_SUCCESS));
     mrb_define_const(mrb, class_mraa, "ERROR_FEATURE_NOT_IMPLEMENTED", mrb_fixnum_value(MRAA_ERROR_FEATURE_NOT_IMPLEMENTED));
     mrb_define_const(mrb, class_mraa, "ERROR_FEATURE_NOT_SUPPORTED", mrb_fixnum_value(MRAA_ERROR_FEATURE_NOT_SUPPORTED));
@@ -115,7 +115,7 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_const(mrb, class_mraa, "ERROR_PLATFORM_NOT_INITIALISED", mrb_fixnum_value(MRAA_ERROR_PLATFORM_NOT_INITIALISED));
     mrb_define_const(mrb, class_mraa, "ERROR_PLATFORM_ALREADY_INITIALISED", mrb_fixnum_value(MRAA_ERROR_PLATFORM_ALREADY_INITIALISED));
     mrb_define_const(mrb, class_mraa, "ERROR_UNSPECIFIED", mrb_fixnum_value(MRAA_ERROR_UNSPECIFIED));
-    // mraa_platform
+    // mraa_platform_t
     mrb_define_const(mrb, class_mraa, "INTEL_GALILEO_GEN1", mrb_fixnum_value(MRAA_INTEL_GALILEO_GEN1));
     mrb_define_const(mrb, class_mraa, "INTEL_GALILEO_GEN2", mrb_fixnum_value(MRAA_INTEL_GALILEO_GEN2));
     mrb_define_const(mrb, class_mraa, "INTEL_EDISON_FAB_C", mrb_fixnum_value(MRAA_INTEL_EDISON_FAB_C));
@@ -123,6 +123,88 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_const(mrb, class_mraa, "INTEL_MINNOWBOARD_MAX", mrb_fixnum_value(MRAA_INTEL_MINNOWBOARD_MAX));
     mrb_define_const(mrb, class_mraa, "RASPBERRY_PI_B", mrb_fixnum_value(MRAA_RASPBERRY_PI_B));
     mrb_define_const(mrb, class_mraa, "UNKNOWN_PLATFORM", mrb_fixnum_value(MRAA_UNKNOWN_PLATFORM));
+    // mraa_intel_edison_miniboard_t
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J17_1", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J17_1));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J17_5", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J17_5));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J17_7", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J17_7));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J17_8", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J17_8));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J17_9", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J17_9));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J17_10", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J17_10));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J17_11", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J17_11));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J17_12", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J17_12));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J17_14", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J17_14));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J18_1", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J18_1));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J18_2", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J18_2));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J18_6", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J18_6));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J18_7", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J18_7));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J18_8", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J18_8));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J18_10", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J18_10));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J18_11", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J18_11));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J18_12", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J18_12));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J18_13", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J18_13));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J19_4", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J19_4));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J19_5", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J19_5));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J19_6", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J19_6));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J19_8", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J19_8));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J19_9", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J19_9));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J19_10", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J19_10));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J19_11", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J19_11));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J19_12", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J19_12));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J19_13", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J19_13));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J19_14", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J19_14));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_3", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_3));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_4", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_4));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_5", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_5));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_6", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_6));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_7", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_7));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_8", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_8));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_9", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_9));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_10", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_10));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_11", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_11));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_12", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_12));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_13", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_13));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_MINIBOARD_J20_14", mrb_fixnum_value(MRAA_INTEL_EDISON_MINIBOARD_J20_14));
+    // mraa_intel_edison_t
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP182", mrb_fixnum_value(MRAA_INTEL_EDISON_GP182));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP135", mrb_fixnum_value(MRAA_INTEL_EDISON_GP135));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP27", mrb_fixnum_value(MRAA_INTEL_EDISON_GP27));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP20", mrb_fixnum_value(MRAA_INTEL_EDISON_GP20));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP28", mrb_fixnum_value(MRAA_INTEL_EDISON_GP28));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP111", mrb_fixnum_value(MRAA_INTEL_EDISON_GP111));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP109", mrb_fixnum_value(MRAA_INTEL_EDISON_GP109));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP115", mrb_fixnum_value(MRAA_INTEL_EDISON_GP115));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP128", mrb_fixnum_value(MRAA_INTEL_EDISON_GP128));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP13", mrb_fixnum_value(MRAA_INTEL_EDISON_GP13));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP165", mrb_fixnum_value(MRAA_INTEL_EDISON_GP165));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP19", mrb_fixnum_value(MRAA_INTEL_EDISON_GP19));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP12", mrb_fixnum_value(MRAA_INTEL_EDISON_GP12));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP183", mrb_fixnum_value(MRAA_INTEL_EDISON_GP183));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP110", mrb_fixnum_value(MRAA_INTEL_EDISON_GP110));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP114", mrb_fixnum_value(MRAA_INTEL_EDISON_GP114));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP129", mrb_fixnum_value(MRAA_INTEL_EDISON_GP129));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP130", mrb_fixnum_value(MRAA_INTEL_EDISON_GP130));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP44", mrb_fixnum_value(MRAA_INTEL_EDISON_GP44));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP46", mrb_fixnum_value(MRAA_INTEL_EDISON_GP46));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP48", mrb_fixnum_value(MRAA_INTEL_EDISON_GP48));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP131", mrb_fixnum_value(MRAA_INTEL_EDISON_GP131));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP14", mrb_fixnum_value(MRAA_INTEL_EDISON_GP14));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP40", mrb_fixnum_value(MRAA_INTEL_EDISON_GP40));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP43", mrb_fixnum_value(MRAA_INTEL_EDISON_GP43));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP77", mrb_fixnum_value(MRAA_INTEL_EDISON_GP77));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP82", mrb_fixnum_value(MRAA_INTEL_EDISON_GP82));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP83", mrb_fixnum_value(MRAA_INTEL_EDISON_GP83));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP134", mrb_fixnum_value(MRAA_INTEL_EDISON_GP134));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP45", mrb_fixnum_value(MRAA_INTEL_EDISON_GP45));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP47", mrb_fixnum_value(MRAA_INTEL_EDISON_GP47));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP49", mrb_fixnum_value(MRAA_INTEL_EDISON_GP49));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP15", mrb_fixnum_value(MRAA_INTEL_EDISON_GP15));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP84", mrb_fixnum_value(MRAA_INTEL_EDISON_GP84));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP42", mrb_fixnum_value(MRAA_INTEL_EDISON_GP42));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP41", mrb_fixnum_value(MRAA_INTEL_EDISON_GP41));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP78", mrb_fixnum_value(MRAA_INTEL_EDISON_GP78));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP79", mrb_fixnum_value(MRAA_INTEL_EDISON_GP79));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP80", mrb_fixnum_value(MRAA_INTEL_EDISON_GP80));
+    mrb_define_const(mrb, class_mraa, "INTEL_EDISON_GP81", mrb_fixnum_value(MRAA_INTEL_EDISON_GP81));
 
     // PWM
     class_mraa_pwm = mrb_define_class_under(mrb, class_mraa, "Pwm", mrb->object_class);
