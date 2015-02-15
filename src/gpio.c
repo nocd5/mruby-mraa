@@ -3,6 +3,7 @@
 #include <mruby.h>
 #include <mruby/data.h>
 #include <mruby/variable.h>
+#include <mruby/object.h>
 #include <mraa.h>
 
 typedef struct {
@@ -92,6 +93,8 @@ mrb_value
 mrb_mraa_gpio_isr(mrb_state *mrb, mrb_value self){
     mrb_mraa_gpio_t *pmmg;
     mrb_int edge_mode;
+    mrb_value func;
+    mrb_value args;
 
     mraa_result_t result;
 
@@ -103,8 +106,15 @@ mrb_mraa_gpio_isr(mrb_state *mrb, mrb_value self){
 
     pmmg->gpio_isr_args->mrb = mrb;
 
-    mrb_get_args(mrb, "io|o",
-            &edge_mode, &pmmg->gpio_isr_args->func, &pmmg->gpio_isr_args->args);
+    args = mrb_nil_value();
+    mrb_get_args(mrb, "io|o", &edge_mode, &func, &args);
+    mrb_obj_iv_set(mrb, (struct RObject*)mrb->object_class, mrb_intern_lit(mrb, "__isr_func__"), func);
+    if (!mrb_nil_p(args)){
+        mrb_obj_iv_set(mrb, (struct RObject*)mrb->object_class, mrb_intern_lit(mrb, "__isr_args__"), args);
+    }
+
+    pmmg->gpio_isr_args->func = func;
+    pmmg->gpio_isr_args->args = args;
 
     result = mraa_gpio_isr(pmmg->gpio, edge_mode, gpio_interrupt, (void *)pmmg->gpio_isr_args);
 
