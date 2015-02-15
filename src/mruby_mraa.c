@@ -70,6 +70,10 @@ extern mrb_value mrb_mraa_i2c_write_reg(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_i2c_write_word_reg(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_i2c_address(mrb_state *mrb, mrb_value self);
 
+// UART
+extern mrb_value mrb_mraa_uart_init(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_uart_get_dev_path(mrb_state *mrb, mrb_value self);
+
 void
 mrb_mruby_mraa_gem_init(mrb_state* mrb){
     struct RClass *class_mraa;
@@ -78,6 +82,7 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     struct RClass *class_mraa_gpio;
     struct RClass *class_mraa_spi;
     struct RClass *class_mraa_i2c;
+    struct RClass *class_mraa_uart;
 
     class_mraa = mrb_define_class(mrb, "Mraa", mrb->object_class);
     // COMMON
@@ -304,6 +309,13 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_const(mrb, class_mraa_i2c, "STD", mrb_fixnum_value(MRAA_I2C_STD));
     mrb_define_const(mrb, class_mraa_i2c, "FAST", mrb_fixnum_value(MRAA_I2C_FAST));
     mrb_define_const(mrb, class_mraa_i2c, "HIGH", mrb_fixnum_value(MRAA_I2C_HIGH));
+
+    // UART
+    class_mraa_uart = mrb_define_class_under(mrb, class_mraa, "Uart", mrb->object_class);
+    MRB_SET_INSTANCE_TT(class_mraa_uart, MRB_TT_DATA);
+    // Uart instance methods
+    mrb_define_method(mrb, class_mraa_uart, "initialize", mrb_mraa_uart_init, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_uart, "get_dev_path", mrb_mraa_uart_get_dev_path, MRB_ARGS_NONE());
 
     mraa_init();
 }
