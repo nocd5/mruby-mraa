@@ -45,18 +45,6 @@ mrb_mraa_aio_read(mrb_state *mrb, mrb_value self){
 }
 
 mrb_value
-mrb_mraa_aio_read_float(mrb_state *mrb, mrb_value self){
-    mraa_aio_context aio;
-    float val;
-
-    Data_Get_Struct(mrb, self, &mrb_mraa_aio_ctx_type, aio);
-
-    val = mraa_aio_read_float(aio);
-
-    return mrb_float_value(mrb, val);
-}
-
-mrb_value
 mrb_mraa_aio_set_bit(mrb_state *mrb, mrb_value self){
     mraa_aio_context aio;
     mrb_int bits;
