@@ -48,6 +48,15 @@ extern mrb_value mrb_mraa_gpio_owner(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_use_mmaped(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_get_pin(mrb_state *mrb, mrb_value self);
 
+// SPI
+extern mrb_value mrb_mraa_spi_init(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_spi_mode(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_spi_frequency(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_spi_transfer(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_spi_transfer_byte(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_spi_lsbmode(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_spi_bit_per_word(mrb_state *mrb, mrb_value self);
+
 // I2C
 extern mrb_value mrb_mraa_i2c_init(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_i2c_frequency(mrb_state *mrb, mrb_value self);
@@ -67,6 +76,7 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     struct RClass *class_mraa_pwm;
     struct RClass *class_mraa_aio;
     struct RClass *class_mraa_gpio;
+    struct RClass *class_mraa_spi;
     struct RClass *class_mraa_i2c;
 
     class_mraa = mrb_define_class(mrb, "Mraa", mrb->object_class);
@@ -173,6 +183,24 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_const(mrb, class_mraa_gpio, "EDGE_BOTH", mrb_fixnum_value(MRAA_GPIO_EDGE_BOTH));
     mrb_define_const(mrb, class_mraa_gpio, "EDGE_RISING", mrb_fixnum_value(MRAA_GPIO_EDGE_RISING));
     mrb_define_const(mrb, class_mraa_gpio, "EDGE_FALLING", mrb_fixnum_value(MRAA_GPIO_EDGE_FALLING));
+
+    // SPI
+    class_mraa_spi = mrb_define_class_under(mrb, class_mraa, "Spi", mrb->object_class);
+    MRB_SET_INSTANCE_TT(class_mraa_spi, MRB_TT_DATA);
+    // Spi instance methods
+    mrb_define_method(mrb, class_mraa_spi, "initialize", mrb_mraa_spi_init, MRB_ARGS_REQ(1) | MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, class_mraa_spi, "mode", mrb_mraa_spi_mode, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_spi, "frequency", mrb_mraa_spi_frequency, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_spi, "transfer", mrb_mraa_spi_transfer, MRB_ARGS_REQ(1) | MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, class_mraa_spi, "transfer_byte", mrb_mraa_spi_transfer_byte, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_spi, "lsbmode", mrb_mraa_spi_lsbmode, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_spi, "bit_per_word", mrb_mraa_spi_bit_per_word, MRB_ARGS_REQ(1));
+    // Spi constants
+    // spi_mode
+    mrb_define_const(mrb, class_mraa_spi, "MODE0", mrb_fixnum_value(MRAA_SPI_MODE0));
+    mrb_define_const(mrb, class_mraa_spi, "MODE1", mrb_fixnum_value(MRAA_SPI_MODE1));
+    mrb_define_const(mrb, class_mraa_spi, "MODE2", mrb_fixnum_value(MRAA_SPI_MODE2));
+    mrb_define_const(mrb, class_mraa_spi, "MODE3", mrb_fixnum_value(MRAA_SPI_MODE3));
 
     // I2C
     class_mraa_i2c = mrb_define_class_under(mrb, class_mraa, "I2c", mrb->object_class);
