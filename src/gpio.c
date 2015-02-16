@@ -8,8 +8,7 @@
 
 typedef struct {
     mrb_state *mrb;
-    mrb_value func;
-    mrb_value args;
+    mrb_value self;
 } gpio_isr_args_t;
 
 typedef struct {
@@ -81,12 +80,25 @@ mrb_mraa_gpio_edge_mode(mrb_state *mrb, mrb_value self){
 }
 
 static void
-gpio_interrupt(void *args)
+gpio_interrupt(void *p)
 {
-    mrb_yield(
-        ((gpio_isr_args_t *)args)->mrb,
-        ((gpio_isr_args_t *)args)->func,
-        ((gpio_isr_args_t *)args)->args);
+    mrb_state *mrb;
+    mrb_value self;
+    mrb_value func;
+    mrb_value args;
+    int ai;
+
+    mrb = ((gpio_isr_args_t *)p)->mrb;
+    self = ((gpio_isr_args_t *)p)->self;
+
+    ai = mrb_gc_arena_save(mrb);
+
+    func = mrb_iv_get(mrb, self, mrb_intern_lit(mrb, "isr_func"));
+    args = mrb_iv_get(mrb, self, mrb_intern_lit(mrb, "isr_args"));
+
+    mrb_yield(mrb, func, args);
+
+    mrb_gc_arena_restore(mrb, ai);
 }
 
 mrb_value
@@ -101,20 +113,18 @@ mrb_mraa_gpio_isr(mrb_state *mrb, mrb_value self){
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
 
     pmmg->gpio_isr_args =
-        (gpio_isr_args_t*)mrb_malloc(mrb, sizeof(gpio_isr_args_t));
+        (gpio_isr_args_t *)mrb_malloc(mrb, sizeof(gpio_isr_args_t));
     memset(pmmg->gpio_isr_args, 0, sizeof(gpio_isr_args_t));
 
     pmmg->gpio_isr_args->mrb = mrb;
+    pmmg->gpio_isr_args->self = self;
 
     args = mrb_nil_value();
     mrb_get_args(mrb, "io|o", &edge_mode, &func, &args);
-    mrb_obj_iv_set(mrb, (struct RObject*)mrb->object_class, mrb_intern_lit(mrb, "__isr_func__"), func);
+    mrb_iv_set(mrb, self, mrb_intern_lit(mrb, "isr_func"), func);
     if (!mrb_nil_p(args)){
-        mrb_obj_iv_set(mrb, (struct RObject*)mrb->object_class, mrb_intern_lit(mrb, "__isr_args__"), args);
+        mrb_iv_set(mrb, self, mrb_intern_lit(mrb, "isr_args"), args);
     }
-
-    pmmg->gpio_isr_args->func = func;
-    pmmg->gpio_isr_args->args = args;
 
     result = mraa_gpio_isr(pmmg->gpio, edge_mode, gpio_interrupt, (void *)pmmg->gpio_isr_args);
 
