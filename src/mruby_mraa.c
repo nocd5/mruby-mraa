@@ -37,8 +37,6 @@ extern mrb_value mrb_mraa_aio_get_bit(mrb_state *mrb, mrb_value self);
 // GPIO
 extern mrb_value mrb_mraa_gpio_init(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_edge_mode(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mraa_gpio_isr(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mraa_gpio_isr_exit(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_mode(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_dir(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_read(mrb_state *mrb, mrb_value self);
@@ -46,6 +44,9 @@ extern mrb_value mrb_mraa_gpio_write(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_owner(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_use_mmaped(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mraa_gpio_get_pin(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_gpio_irq(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_gpio_enable_irq(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mraa_gpio_disable_irq(mrb_state *mrb, mrb_value self);
 
 // SPI
 extern mrb_value mrb_mraa_spi_init(mrb_state *mrb, mrb_value self);
@@ -243,8 +244,6 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     // Gpio instance methods
     mrb_define_method(mrb, class_mraa_gpio, "initialize", mrb_mraa_gpio_init, MRB_ARGS_REQ(1) | MRB_ARGS_OPT(1));
     mrb_define_method(mrb, class_mraa_gpio, "edge_mode", mrb_mraa_gpio_edge_mode, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, class_mraa_gpio, "isr", mrb_mraa_gpio_isr, MRB_ARGS_REQ(2) | MRB_ARGS_OPT(1));
-    mrb_define_method(mrb, class_mraa_gpio, "isr_exit", mrb_mraa_gpio_isr_exit, MRB_ARGS_NONE());
     mrb_define_method(mrb, class_mraa_gpio, "mode", mrb_mraa_gpio_mode, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, class_mraa_gpio, "dir", mrb_mraa_gpio_dir, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, class_mraa_gpio, "read", mrb_mraa_gpio_read, MRB_ARGS_NONE());
@@ -252,6 +251,9 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_method(mrb, class_mraa_gpio, "owner", mrb_mraa_gpio_owner, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, class_mraa_gpio, "use_mmaped", mrb_mraa_gpio_use_mmaped, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, class_mraa_gpio, "get_pin", mrb_mraa_gpio_get_pin, MRB_ARGS_OPT(1));
+    mrb_define_method(mrb, class_mraa_gpio, "irq", mrb_mraa_gpio_irq, MRB_ARGS_NONE());
+    mrb_define_method(mrb, class_mraa_gpio, "enable_irq", mrb_mraa_gpio_enable_irq, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, class_mraa_gpio, "disable_irq", mrb_mraa_gpio_disable_irq, MRB_ARGS_NONE());
     // Gpio constants
     // gpio_mode
     mrb_define_const(mrb, class_mraa_gpio, "STRONG", mrb_fixnum_value(MRAA_GPIO_STRONG));

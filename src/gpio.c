@@ -61,6 +61,8 @@ mrb_mraa_gpio_init(mrb_state *mrb, mrb_value self){
         mrb_raisef(mrb, E_RUNTIME_ERROR, "Failed to initialize PIN:%S.", mrb_fixnum_value(pin));
     }
 
+    mrb_iv_set(mrb, self, mrb_intern_lit(mrb, "@irq"), mrb_false_value());
+
     return self;
 }
 
@@ -75,71 +77,6 @@ mrb_mraa_gpio_edge_mode(mrb_state *mrb, mrb_value self){
 
     mrb_get_args(mrb, "i", &edge_mode);
     result = mraa_gpio_edge_mode(pmmg->gpio, edge_mode);
-
-    return mrb_fixnum_value(result);
-}
-
-static void
-gpio_interrupt(void *p)
-{
-    mrb_state *mrb;
-    mrb_value self;
-    mrb_value func;
-    mrb_value args;
-    int ai;
-
-    mrb = ((gpio_isr_args_t *)p)->mrb;
-    self = ((gpio_isr_args_t *)p)->self;
-
-    ai = mrb_gc_arena_save(mrb);
-
-    func = mrb_iv_get(mrb, self, mrb_intern_lit(mrb, "isr_func"));
-    args = mrb_iv_get(mrb, self, mrb_intern_lit(mrb, "isr_args"));
-
-    mrb_yield(mrb, func, args);
-
-    mrb_gc_arena_restore(mrb, ai);
-}
-
-mrb_value
-mrb_mraa_gpio_isr(mrb_state *mrb, mrb_value self){
-    mrb_mraa_gpio_t *pmmg;
-    mrb_int edge_mode;
-    mrb_value func;
-    mrb_value args;
-
-    mraa_result_t result;
-
-    Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
-
-    pmmg->gpio_isr_args =
-        (gpio_isr_args_t *)mrb_malloc(mrb, sizeof(gpio_isr_args_t));
-    memset(pmmg->gpio_isr_args, 0, sizeof(gpio_isr_args_t));
-
-    pmmg->gpio_isr_args->mrb = mrb;
-    pmmg->gpio_isr_args->self = self;
-
-    args = mrb_nil_value();
-    mrb_get_args(mrb, "io|o", &edge_mode, &func, &args);
-    mrb_iv_set(mrb, self, mrb_intern_lit(mrb, "isr_func"), func);
-    if (!mrb_nil_p(args)){
-        mrb_iv_set(mrb, self, mrb_intern_lit(mrb, "isr_args"), args);
-    }
-
-    result = mraa_gpio_isr(pmmg->gpio, edge_mode, gpio_interrupt, (void *)pmmg->gpio_isr_args);
-
-    return mrb_fixnum_value(result);
-}
-
-mrb_value
-mrb_mraa_gpio_isr_exit(mrb_state *mrb, mrb_value self){
-    mrb_mraa_gpio_t *pmmg;
-
-    mraa_result_t result;
-
-    Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
-
-    result = mraa_gpio_isr_exit(pmmg->gpio);
 
     return mrb_fixnum_value(result);
 }
@@ -250,5 +187,63 @@ mrb_mraa_gpio_get_pin(mrb_state *mrb, mrb_value self){
     }
 
     return mrb_fixnum_value(pin);
+}
+
+static void
+gpio_interrupt(void *p){
+    mrb_state *mrb;
+    mrb_value self;
+
+    mrb = ((gpio_isr_args_t *)p)->mrb;
+    self = ((gpio_isr_args_t *)p)->self;
+    mrb_iv_set(mrb, self, mrb_intern_lit(mrb, "@irq"), mrb_true_value());
+}
+
+mrb_value
+mrb_mraa_gpio_irq(mrb_state *mrb, mrb_value self){
+    mrb_value irq;
+    irq = mrb_iv_get(mrb, self, mrb_intern_lit(mrb, "@irq"));
+    if (mrb_bool(irq)){
+        mrb_iv_set(mrb, self, mrb_intern_lit(mrb, "@irq"), mrb_false_value());
+    }
+    return irq;
+}
+
+mrb_value
+mrb_mraa_gpio_enable_irq(mrb_state *mrb, mrb_value self){
+    mrb_mraa_gpio_t *pmmg;
+    mrb_int edge_mode;
+
+    mraa_result_t result;
+
+    Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
+
+    pmmg->gpio_isr_args =
+        (gpio_isr_args_t *)mrb_malloc(mrb, sizeof(gpio_isr_args_t));
+    memset(pmmg->gpio_isr_args, 0, sizeof(gpio_isr_args_t));
+
+    pmmg->gpio_isr_args->mrb = mrb;
+    pmmg->gpio_isr_args->self = self;
+
+    mrb_iv_set(mrb, self, mrb_intern_lit(mrb, "@irq"), mrb_false_value());
+    mrb_get_args(mrb, "i", &edge_mode);
+
+    result = mraa_gpio_isr(pmmg->gpio, edge_mode, gpio_interrupt, (void *)pmmg->gpio_isr_args);
+
+    return mrb_fixnum_value(result);
+}
+
+mrb_value
+mrb_mraa_gpio_disable_irq(mrb_state *mrb, mrb_value self){
+    mrb_mraa_gpio_t *pmmg;
+
+    mraa_result_t result;
+
+    Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
+
+    result = mraa_gpio_isr_exit(pmmg->gpio);
+    mrb_iv_set(mrb, self, mrb_intern_lit(mrb, "@irq"), mrb_false_value());
+
+    return mrb_fixnum_value(result);
 }
 
