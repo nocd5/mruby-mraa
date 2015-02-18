@@ -84,14 +84,14 @@ mrb_mraa_gpio_edge_mode(mrb_state *mrb, mrb_value self){
 mrb_value
 mrb_mraa_gpio_mode(mrb_state *mrb, mrb_value self){
     mrb_mraa_gpio_t *pmmg;
-    mrb_int edge_mode;
+    mrb_int mode;
 
     mraa_result_t result;
 
     Data_Get_Struct(mrb, self, &mrb_mraa_gpio_ctx_type, pmmg);
 
-    mrb_get_args(mrb, "i", &edge_mode);
-    result = mraa_gpio_mode(pmmg->gpio, edge_mode);
+    mrb_get_args(mrb, "i", &mode);
+    result = mraa_gpio_mode(pmmg->gpio, mode);
 
     return mrb_fixnum_value(result);
 }

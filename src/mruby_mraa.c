@@ -255,17 +255,17 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_method(mrb, class_mraa_gpio, "enable_irq", mrb_mraa_gpio_enable_irq, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, class_mraa_gpio, "disable_irq", mrb_mraa_gpio_disable_irq, MRB_ARGS_NONE());
     // Gpio constants
-    // gpio_mode
+    // gpio_mode_t
     mrb_define_const(mrb, class_mraa_gpio, "STRONG", mrb_fixnum_value(MRAA_GPIO_STRONG));
     mrb_define_const(mrb, class_mraa_gpio, "PULLUP", mrb_fixnum_value(MRAA_GPIO_PULLUP));
     mrb_define_const(mrb, class_mraa_gpio, "PULLDOWN", mrb_fixnum_value(MRAA_GPIO_PULLDOWN));
-    // gpio_dir
+    // gpio_dir_t
     mrb_define_const(mrb, class_mraa_gpio, "HIZ", mrb_fixnum_value(MRAA_GPIO_HIZ));
     mrb_define_const(mrb, class_mraa_gpio, "OUT", mrb_fixnum_value(MRAA_GPIO_OUT));
     mrb_define_const(mrb, class_mraa_gpio, "IN", mrb_fixnum_value(MRAA_GPIO_IN));
     mrb_define_const(mrb, class_mraa_gpio, "OUT_HIGH", mrb_fixnum_value(MRAA_GPIO_OUT_HIGH));
     mrb_define_const(mrb, class_mraa_gpio, "OUT_LOW", mrb_fixnum_value(MRAA_GPIO_OUT_LOW));
-    // gpio_edge
+    // gpio_edge_t
     mrb_define_const(mrb, class_mraa_gpio, "EDGE_NONE", mrb_fixnum_value(MRAA_GPIO_EDGE_NONE));
     mrb_define_const(mrb, class_mraa_gpio, "EDGE_BOTH", mrb_fixnum_value(MRAA_GPIO_EDGE_BOTH));
     mrb_define_const(mrb, class_mraa_gpio, "EDGE_RISING", mrb_fixnum_value(MRAA_GPIO_EDGE_RISING));
@@ -283,7 +283,7 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_method(mrb, class_mraa_spi, "lsbmode", mrb_mraa_spi_lsbmode, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, class_mraa_spi, "bit_per_word", mrb_mraa_spi_bit_per_word, MRB_ARGS_REQ(1));
     // Spi constants
-    // spi_mode
+    // spi_mode_t
     mrb_define_const(mrb, class_mraa_spi, "MODE0", mrb_fixnum_value(MRAA_SPI_MODE0));
     mrb_define_const(mrb, class_mraa_spi, "MODE1", mrb_fixnum_value(MRAA_SPI_MODE1));
     mrb_define_const(mrb, class_mraa_spi, "MODE2", mrb_fixnum_value(MRAA_SPI_MODE2));
@@ -305,7 +305,7 @@ mrb_mruby_mraa_gem_init(mrb_state* mrb){
     mrb_define_method(mrb, class_mraa_i2c, "write_word_reg", mrb_mraa_i2c_write_word_reg, MRB_ARGS_REQ(2));
     mrb_define_method(mrb, class_mraa_i2c, "address", mrb_mraa_i2c_address, MRB_ARGS_REQ(1));
     // I2c constants
-    // i2c_mode
+    // i2c_mode_t
     mrb_define_const(mrb, class_mraa_i2c, "STD", mrb_fixnum_value(MRAA_I2C_STD));
     mrb_define_const(mrb, class_mraa_i2c, "FAST", mrb_fixnum_value(MRAA_I2C_FAST));
     mrb_define_const(mrb, class_mraa_i2c, "HIGH", mrb_fixnum_value(MRAA_I2C_HIGH));
