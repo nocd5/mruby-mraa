@@ -1,4 +1,3 @@
-#include <string.h>
 #include <stdbool.h>
 #include <mruby.h>
 #include <mruby/data.h>
@@ -45,5 +44,5 @@ mrb_mraa_uart_get_dev_path(mrb_state *mrb, mrb_value self){
 
     path = mraa_uart_get_dev_path(uart);
 
-    return mrb_str_new(mrb, path, strlen(path));
+    return mrb_str_new_cstr(mrb, path);
 }

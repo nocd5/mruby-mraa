@@ -1,4 +1,3 @@
-#include <string.h>
 #include <mruby.h>
 #include <mraa.h>
 
@@ -51,7 +50,7 @@ mrb_mraa_get_platform_name(mrb_state *mrb, mrb_value self){
 
     plat = mraa_get_platform_name();
 
-    return mrb_str_new(mrb, plat, strlen(plat));
+    return mrb_str_new_cstr(mrb, plat);
 }
 
 mrb_value
@@ -72,7 +71,7 @@ mrb_mraa_version(mrb_state *mrb, mrb_value self){
 
     ver = mraa_get_version();
 
-    return mrb_str_new(mrb, ver, strlen(ver));
+    return mrb_str_new_cstr(mrb, ver);
 }
 
 mrb_value
